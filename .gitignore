@@ -1,0 +1,33 @@
+# 의존성
+node_modules/
+.pnpm-store/
+
+# 빌드 산출물
+.next/
+out/
+dist/
+build/
+
+# 환경 변수
+.env
+.env*.local
+
+# 로그
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# 테스트/커버리지
+coverage/
+playwright-report/
+test-results/
+
+# OS / 에디터
+.DS_Store
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Claude Code (개인 로컬 설정은 커밋하지 않음)
+.claude/settings.local.json
