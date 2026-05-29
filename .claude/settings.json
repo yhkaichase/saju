@@ -16,14 +16,8 @@
       "Bash(git branch:*)",
       "Bash(git checkout:*)"
     ],
-    "ask": [
-      "Bash(git push:*)"
-    ],
-    "deny": [
-      "Read(./.env)",
-      "Read(./.env.*)",
-      "Bash(rm -rf:*)"
-    ]
+    "ask": ["Bash(git push:*)"],
+    "deny": ["Read(./.env)", "Read(./.env.*)", "Bash(rm -rf:*)"]
   },
   "hooks": {
     "PostToolUse": [

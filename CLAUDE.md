@@ -15,41 +15,46 @@
 
 ## 기술 스택
 
-> 초기 셋업 기준 권장 스택입니다. 확정/변경되면 이 섹션과 아래 명령어를 갱신하세요.
-
-- **언어/런타임**: TypeScript, Node.js (LTS)
-- **프레임워크**: Next.js (App Router) — 프론트엔드 + API 라우트 통합
-- **스타일**: Tailwind CSS
+- **언어/런타임**: TypeScript (strict), Node.js 22
+- **프레임워크**: Next.js 16 (App Router, Turbopack) — 프론트엔드 + API 라우트 통합
+- **스타일**: Tailwind CSS v4
 - **패키지 매니저**: pnpm
-- **테스트**: Vitest (단위), Playwright (E2E) — 도입 시 갱신
-- **포맷/린트**: Prettier, ESLint
+- **테스트**: Vitest (단위) — E2E(Playwright)는 도입 시 갱신
+- **포맷/린트**: Prettier, ESLint (eslint-config-next)
+
+> 사주 계산 코어는 **단일 TS 스택 안에서 순수 모듈로 격리**합니다(`src/lib`).
+> 천문 정밀도는 분(分) 단위면 충분하며, 한국 사주의 정답 기준은 KASI 공식
+> 만세력입니다. 별도 언어/서비스로 분리하지 않되, 코어가 Next에 의존하지 않게
+> 유지해 추후 추출 가능성을 열어둡니다.
 
 ## 개발 명령어
-
-> 아직 스캐폴딩 전입니다. `package.json` 생성 후 실제 스크립트에 맞춰 갱신하세요.
 
 ```bash
 pnpm install          # 의존성 설치
 pnpm dev              # 개발 서버
 pnpm build            # 프로덕션 빌드
 pnpm start            # 프로덕션 서버
-pnpm test             # 테스트
+pnpm test             # 테스트 (vitest run)
+pnpm test:watch       # 테스트 watch
+pnpm typecheck        # tsc --noEmit
 pnpm lint             # 린트
-pnpm format           # 포맷
+pnpm format           # 포맷 (prettier --write)
+pnpm format:check     # 포맷 검사
 ```
 
-## 디렉터리 구조 (예정)
+## 디렉터리 구조
 
 ```
 src/
   app/                # Next.js App Router (페이지 + API 라우트)
   lib/
-    saju/             # 사주 계산 핵심 로직 (만세력·간지·오행·십신)
-    calendar/         # 음양력 변환·절기 계산
-  components/         # UI 컴포넌트
-  types/              # 공용 타입
-tests/                # 테스트
+    saju/             # 사주 계산 핵심 로직 (간지·오행·십신·대운) — 순수 모듈
+      constants.ts    #   천간·지지·60갑자 (확정 상수)
+    calendar/         # 음양력 변환·절기 계산 (근거 필요 — README 참고)
+  types/              # 공용 타입 (saju.ts)
 ```
+
+> 단위 테스트는 대상 파일 옆에 `*.test.ts`로 둡니다 (예: `constants.test.ts`).
 
 ## 작업 규칙
 
