@@ -16,6 +16,7 @@ export * from "./four-pillars";
 export * from "./five-elements";
 export * from "./ten-gods";
 export * from "./major-fortune";
+export * from "./saju-chart";
 
 // 4기둥(연·월·일·시) + 파생(오행·십신·대운) 모두 구현 완료.
 //
