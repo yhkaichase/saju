@@ -27,7 +27,9 @@ describe("오행/음양 매핑", () => {
   });
 
   it("천간 음양은 陽陰 교대", () => {
-    expect(HEAVENLY_STEMS.map((s) => HEAVENLY_STEM_YIN_YANG[s]).join("")).toBe("陽陰陽陰陽陰陽陰陽陰");
+    expect(HEAVENLY_STEMS.map((s) => HEAVENLY_STEM_YIN_YANG[s]).join("")).toBe(
+      "陽陰陽陰陽陰陽陰陽陰",
+    );
   });
 
   it("지지 오행: 水土木木土火火土金金土水", () => {
