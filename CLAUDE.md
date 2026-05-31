@@ -48,13 +48,31 @@ pnpm format:check     # 포맷 검사
 src/
   app/                # Next.js App Router (페이지 + API 라우트)
   lib/
-    saju/             # 사주 계산 핵심 로직 (간지·오행·십신·대운) — 순수 모듈
-      constants.ts    #   천간·지지·60갑자 (확정 상수)
-    calendar/         # 음양력 변환·절기 계산 (근거 필요 — README 참고)
+    saju/             # 사주 계산 핵심 로직 — 순수 모듈
+      constants.ts    #   천간·지지·60갑자·지지 본기(확정 상수)
+      day-pillar.ts   #   일주 (JDN + 60갑자, 자정/자시 경계 정책)
+      hour-pillar.ts  #   시주 (시지 경계 + 오서둔, 야자시/조자시 SSOT)
+      year-pillar.ts  #   연주 (입춘 경계 + 연간지)
+      month-pillar.ts #   월주 (절기 황경 + 오호둔)
+      four-pillars.ts #   4기둥 통합 (calculateFourPillars)
+      five-elements.ts#   오행 매핑·생극 (지지는 본기에서 파생)
+      ten-gods.ts     #   십신 (일간 기준, 본기 음양)
+      major-fortune.ts#   대운 (순행/역행·대운수·간지 나열)
+    calendar/         # 음양력 변환·절기 계산
+      julian-day.ts   #   정수 JDN (Fliegel–Van Flandern)
+      solar-terms.ts  #   절기 황경·절입 시각 (astronomy-engine)
+      timezone.ts     #   KST(UTC+9) ↔ UTC 경계 변환
   types/              # 공용 타입 (saju.ts)
 ```
 
 > 단위 테스트는 대상 파일 옆에 `*.test.ts`로 둡니다 (예: `constants.test.ts`).
+
+### 구현 현황
+
+- ✅ 4기둥(연·월·일·시) + 파생(오행·십신·대운) 전부 구현, 골든 테스트 통과.
+- ⚠️ **미해결(KASI 대조 필요)**: ① 절기/입춘 절입 시각의 분 단위 정답,
+  ② 대운수(大運數) 반올림·0시작 경계 관례. astronomy-engine 계산값은 공표
+  만세력과 ±1분 수준이나, 한국 정답 기준인 KASI 공식값과 육안 대조가 남아 있습니다.
 
 ## 작업 규칙
 
