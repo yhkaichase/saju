@@ -1,0 +1,114 @@
+/**
+ * 오행(五行) — 천간·지지의 목화토금수 분류, 음양, 생극(生剋) 관계.
+ *
+ * 이 매핑은 명리학에서 확정된 도메인 상수입니다(천문 계산 불필요).
+ * (참고: .claude/rules/saju-domain.md — 파생 계산)
+ */
+
+import { EARTHLY_BRANCHES, HEAVENLY_STEMS } from "./constants";
+import type { EarthlyBranch, FiveElement, HeavenlyStem, YinYang } from "@/types/saju";
+
+/**
+ * 천간(天干)의 오행. 甲乙=木, 丙丁=火, 戊己=土, 庚辛=金, 壬癸=水.
+ * HEAVENLY_STEMS 순서와 1:1 대응.
+ */
+export const HEAVENLY_STEM_ELEMENT: Readonly<Record<HeavenlyStem, FiveElement>> = {
+  甲: "木",
+  乙: "木",
+  丙: "火",
+  丁: "火",
+  戊: "土",
+  己: "土",
+  庚: "金",
+  辛: "金",
+  壬: "水",
+  癸: "水",
+};
+
+/** 천간의 음양. 순서대로 陽陰 교대(甲=陽, 乙=陰, …). */
+export const HEAVENLY_STEM_YIN_YANG: Readonly<Record<HeavenlyStem, YinYang>> = {
+  甲: "陽",
+  乙: "陰",
+  丙: "陽",
+  丁: "陰",
+  戊: "陽",
+  己: "陰",
+  庚: "陽",
+  辛: "陰",
+  壬: "陽",
+  癸: "陰",
+};
+
+/**
+ * 지지(地支)의 오행. 寅卯=木, 巳午=火, 申酉=金, 亥子=水,
+ * 辰戌丑未=土(土는 네 계절 끝에 분산).
+ */
+export const EARTHLY_BRANCH_ELEMENT: Readonly<Record<EarthlyBranch, FiveElement>> = {
+  子: "水",
+  丑: "土",
+  寅: "木",
+  卯: "木",
+  辰: "土",
+  巳: "火",
+  午: "火",
+  未: "土",
+  申: "金",
+  酉: "金",
+  戌: "土",
+  亥: "水",
+};
+
+/**
+ * 지지의 음양(체용 중 "체"의 통상 분류). 子寅辰午申戌=陽, 丑卯巳未酉亥=陰.
+ * (인덱스 짝수=陽, 홀수=陰)
+ */
+export const EARTHLY_BRANCH_YIN_YANG: Readonly<Record<EarthlyBranch, YinYang>> = {
+  子: "陽",
+  丑: "陰",
+  寅: "陽",
+  卯: "陰",
+  辰: "陽",
+  巳: "陰",
+  午: "陽",
+  未: "陰",
+  申: "陽",
+  酉: "陰",
+  戌: "陽",
+  亥: "陰",
+};
+
+/** 오행 상생(相生): 木→火→土→金→水→木. key가 value를 생(生)함. */
+export const FIVE_ELEMENT_GENERATES: Readonly<Record<FiveElement, FiveElement>> = {
+  木: "火",
+  火: "土",
+  土: "金",
+  金: "水",
+  水: "木",
+};
+
+/** 오행 상극(相剋): 木→土→水→火→金→木. key가 value를 극(剋)함. */
+export const FIVE_ELEMENT_OVERCOMES: Readonly<Record<FiveElement, FiveElement>> = {
+  木: "土",
+  土: "水",
+  水: "火",
+  火: "金",
+  金: "木",
+};
+
+/** a가 b를 생(生)하는가. */
+export function generates(a: FiveElement, b: FiveElement): boolean {
+  return FIVE_ELEMENT_GENERATES[a] === b;
+}
+
+/** a가 b를 극(剋)하는가. */
+export function overcomes(a: FiveElement, b: FiveElement): boolean {
+  return FIVE_ELEMENT_OVERCOMES[a] === b;
+}
+
+/** 상수 정합성 보장용(개발 시점 점검). 모든 간지가 매핑을 갖는지. */
+export const ALL_STEMS_MAPPED = HEAVENLY_STEMS.every(
+  (s) => s in HEAVENLY_STEM_ELEMENT && s in HEAVENLY_STEM_YIN_YANG,
+);
+export const ALL_BRANCHES_MAPPED = EARTHLY_BRANCHES.every(
+  (b) => b in EARTHLY_BRANCH_ELEMENT && b in EARTHLY_BRANCH_YIN_YANG,
+);
