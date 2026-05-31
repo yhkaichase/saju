@@ -4,6 +4,14 @@
 > 구현 시 반드시 출처·정밀도·시간대를 코드 주석과 PR 본문에 남기세요.
 > (규칙: `../../../.claude/rules/saju-domain.md`)
 
+## 구현 완료
+
+- **`julian-day.ts` — `gregorianToJulianDayNumber(y, m, d)`**: 정수 JDN(Fliegel–Van
+  Flandern, proleptic Gregorian). 일주(日柱) 계산의 기반. KST 벽시계 Y/M/D를
+  입력해야 하며 UTC 게터 사용 금지(자정 근처 하루 밀림). 일주 자체는
+  `src/lib/saju/day-pillar.ts`에 구현(앵커: 1949-10-01=甲子, 공식 `(JDN+49)%60`).
+  일자 경계 정책(자정/자시)은 학파 분기 사안으로 옵션화되어 있음.
+
 ## 구현 예정 (근거 필요)
 
 - **절기 시각 계산**: 태양황경(黃經)이 15°의 배수가 되는 순간.
