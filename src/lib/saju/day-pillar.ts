@@ -48,6 +48,8 @@ export interface DayPillarInput {
   day: number;
   /** 0~23 (KST). "zishi23" 정책에서만 사용. 미지정 시 0으로 간주. */
   hour?: number;
+  /** 0~59 (KST). 일주에는 영향 없으나 시주(時柱)의 시지 경계 판정에 사용. */
+  minute?: number;
   /** 일자 경계 정책. 기본 "midnight". */
   dayBoundaryPolicy?: DayBoundaryPolicy;
 }
