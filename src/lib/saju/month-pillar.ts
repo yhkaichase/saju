@@ -23,29 +23,37 @@
 
 import { IPCHUN_LONGITUDE, sunEclipticLongitude } from "@/lib/calendar/solar-terms";
 import { kstWallClockToUtc } from "@/lib/calendar/timezone";
-import { EARTHLY_BRANCHES, HEAVENLY_STEMS } from "./constants";
+import {
+  branchIndex,
+  EARTHLY_BRANCH_COUNT,
+  EARTHLY_BRANCHES,
+  HEAVENLY_STEM_COUNT,
+  HEAVENLY_STEMS,
+  mod,
+  stemIndex,
+} from "./constants";
 import type { DayPillarInput } from "./day-pillar";
 import { calculateYearPillar, type YearPillarInput } from "./year-pillar";
-import type { EarthlyBranch, SexagenaryPair } from "@/types/saju";
+import type { SexagenaryPair } from "@/types/saju";
 
 /** 월주 계산 입력 — 일주 입력과 동일(KST 벽시계). */
 export type MonthPillarInput = DayPillarInput;
 
 /** 寅(인)의 지지 인덱스 — 입춘 직후 월지. */
-const YIN_BRANCH_INDEX = EARTHLY_BRANCHES.indexOf("寅" as EarthlyBranch);
+const YIN_BRANCH_INDEX = branchIndex("寅");
 /** 황경 한 칸(월) = 30도. */
 const DEGREES_PER_MONTH = 30;
-/** 천간 개수 — 오호둔 모듈러 연산용. */
-const HEAVENLY_STEM_COUNT = 10;
+/** 한 바퀴 = 360도. */
+const FULL_CIRCLE_DEGREES = 360;
 
 /**
  * 태양황경(도)으로부터 월지(月支) index(0=子 … 11=亥)를 구합니다.
  * 입춘(315°)을 寅(인)의 시작으로 보고 30°씩 진행합니다.
  */
 export function sunLongitudeToMonthBranchIndex(longitude: number): number {
-  const fromIpchun = (((longitude - IPCHUN_LONGITUDE) % 360) + 360) % 360;
+  const fromIpchun = mod(longitude - IPCHUN_LONGITUDE, FULL_CIRCLE_DEGREES);
   const step = Math.floor(fromIpchun / DEGREES_PER_MONTH);
-  return (YIN_BRANCH_INDEX + step) % 12;
+  return mod(YIN_BRANCH_INDEX + step, EARTHLY_BRANCH_COUNT);
 }
 
 /** 주어진 KST 출생 시각의 월주(月柱) 간지를 반환합니다. */
@@ -58,7 +66,7 @@ export function calculateMonthPillar(input: MonthPillarInput): SexagenaryPair {
 
   // 월간: 입춘 보정된 연주의 연간을 SSOT로 오호둔 적용.
   const yearPillar = calculateYearPillar(input as YearPillarInput);
-  const yearStemIndex = HEAVENLY_STEMS.indexOf(yearPillar.heavenlyStem);
+  const yearStemIndex = stemIndex(yearPillar.heavenlyStem);
   const monthStemIndex = (yearStemIndex * 2 + monthBranchIndex) % HEAVENLY_STEM_COUNT;
 
   return {

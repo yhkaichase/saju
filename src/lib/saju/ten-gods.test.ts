@@ -42,6 +42,17 @@ describe("tenGodOfStem — 천간 대상 십신", () => {
   it("庚 → 丁 = 正官 (火剋金·음양 다름)", () => {
     expect(tenGodOfStem("庚", "丁")).toBe("正官");
   });
+
+  // 陰日干 乙(陰木) 기준 — 음양 비교가 음일간에서도 옳은지 독립 검증.
+  it("乙 → 丙 = 傷官 (木生火·음양 다름)", () => {
+    expect(tenGodOfStem("乙", "丙")).toBe("傷官");
+  });
+  it("乙 → 庚 = 正官 (金剋木·음양 다름)", () => {
+    expect(tenGodOfStem("乙", "庚")).toBe("正官");
+  });
+  it("乙 → 辛 = 偏官 (金剋木·음양 같음)", () => {
+    expect(tenGodOfStem("乙", "辛")).toBe("偏官");
+  });
 });
 
 describe("tenGodOfBranch — 지지 대상 십신 (본기 음양)", () => {

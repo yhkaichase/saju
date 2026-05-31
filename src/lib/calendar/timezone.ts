@@ -29,3 +29,30 @@ export function kstWallClockToUtc(
   const asIfUtc = Date.UTC(year, month - 1, day, hour, minute);
   return new Date(asIfUtc - KST_OFFSET_MINUTES * 60 * 1000);
 }
+
+/** KST 벽시계 분해 결과 — 계산 코어 입력으로 그대로 전달할 수 있습니다. */
+export interface KstWallClock {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+}
+
+/**
+ * UTC 순간(`Date`)을 **KST 벽시계** 연·월·일·시·분으로 분해합니다.
+ *
+ * 계산 코어는 KST 벽시계를 입력으로 받으므로, `Date`(예: API 경계에서 받은 UTC
+ * 시각)를 직접 코어에 넣지 말고 이 함수로 변환하세요. `getUTCFullYear()` 등을
+ * 직접 쓰면 KST로 9시간 밀어주는 처리가 빠져 자정·절입 근처에서 날짜가 어긋납니다.
+ */
+export function utcToKstWallClock(utc: Date): KstWallClock {
+  const shifted = new Date(utc.getTime() + KST_OFFSET_MINUTES * 60 * 1000);
+  return {
+    year: shifted.getUTCFullYear(),
+    month: shifted.getUTCMonth() + 1,
+    day: shifted.getUTCDate(),
+    hour: shifted.getUTCHours(),
+    minute: shifted.getUTCMinutes(),
+  };
+}

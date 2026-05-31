@@ -71,7 +71,13 @@ const SOLAR_TERM_STEP = 30;
 const SOLAR_TERM_PHASE = 15;
 
 /**
- * 주어진 UTC 시각의 태양 겉보기 황경(도, 0~360)을 반환합니다.
+ * 주어진 UTC 시각의 태양 **겉보기 진황경(apparent true ecliptic longitude of
+ * date)**(도, 0~360)을 반환합니다.
+ *
+ * astronomy-engine `SunPosition`은 "apparent geocentric true ecliptic
+ * coordinates of date"를 반환합니다(세차·장동 보정 포함). 절기는 이 겉보기
+ * 진황경으로 정의되므로 평균황경이 아닌 이 값이 정확합니다.
+ * (출처: astronomy-engine `SunPosition` JSDoc — "apparent ... of date".)
  *
  * 월주(月柱)의 월지(月支)는 절입 시각을 따로 탐색하지 않고 이 황경으로 즉시
  * 구간 판정할 수 있습니다(연말/연초를 가로지르는 子월·丑월도 자연 처리).

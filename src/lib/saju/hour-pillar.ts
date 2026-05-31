@@ -27,15 +27,19 @@
  *       (커밋 전 KASI 만세력으로 골든 1~2개 육안 대조 권장)
  */
 
-import { EARTHLY_BRANCHES, HEAVENLY_STEMS, sexagenaryIndexOf, SEXAGENARY_CYCLE } from "./constants";
+import {
+  EARTHLY_BRANCHES,
+  HEAVENLY_STEM_COUNT,
+  HEAVENLY_STEMS,
+  sexagenaryIndexOf,
+  SEXAGENARY_CYCLE,
+  stemIndex,
+} from "./constants";
 import { calculateDayPillar, type DayPillarInput } from "./day-pillar";
 import type { SexagenaryPair } from "@/types/saju";
 
 /** 시주 계산 입력은 일주 입력과 동일 — KST 벽시계 + 경계 정책을 공유합니다. */
 export type HourPillarInput = DayPillarInput;
-
-/** 천간 개수 — 오서둔 모듈러 연산용. */
-const HEAVENLY_STEM_COUNT = 10;
 
 /** 자시(子時) 시작 시각(분): 23:00. */
 const ZISHI_START_MINUTES = 23 * 60;
@@ -68,7 +72,7 @@ export function calculateHourPillar(input: HourPillarInput): SexagenaryPair {
 
   // 시점에 적용되는 일주 → 그 일간이 오서둔의 기준 (야자시/조자시 SSOT).
   const dayPillar = calculateDayPillar(input);
-  const dayStemIndex = HEAVENLY_STEMS.indexOf(dayPillar.heavenlyStem);
+  const dayStemIndex = stemIndex(dayPillar.heavenlyStem);
 
   const hourBranchIndex = hourToBranchIndex(hour, minute);
   const hourStemIndex = (dayStemIndex * 2 + hourBranchIndex) % HEAVENLY_STEM_COUNT;

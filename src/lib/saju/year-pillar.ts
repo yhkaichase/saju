@@ -17,7 +17,13 @@
 
 import { ipchunInstantUtc } from "@/lib/calendar/solar-terms";
 import { kstWallClockToUtc } from "@/lib/calendar/timezone";
-import { EARTHLY_BRANCHES, HEAVENLY_STEMS } from "./constants";
+import {
+  EARTHLY_BRANCH_COUNT,
+  EARTHLY_BRANCHES,
+  HEAVENLY_STEM_COUNT,
+  HEAVENLY_STEMS,
+  mod,
+} from "./constants";
 import type { DayPillarInput } from "./day-pillar";
 import type { SexagenaryPair } from "@/types/saju";
 
@@ -42,11 +48,9 @@ export function effectiveSajuYear(input: YearPillarInput): number {
 /** 양력 연도(입춘 보정 완료)로부터 연주 간지를 구합니다. */
 export function yearPillarFromSajuYear(sajuYear: number): SexagenaryPair {
   const n = sajuYear - YEAR_PILLAR_ANCHOR_OFFSET;
-  const stemIndex = ((n % 10) + 10) % 10;
-  const branchIndex = ((n % 12) + 12) % 12;
   return {
-    heavenlyStem: HEAVENLY_STEMS[stemIndex],
-    earthlyBranch: EARTHLY_BRANCHES[branchIndex],
+    heavenlyStem: HEAVENLY_STEMS[mod(n, HEAVENLY_STEM_COUNT)],
+    earthlyBranch: EARTHLY_BRANCHES[mod(n, EARTHLY_BRANCH_COUNT)],
   };
 }
 

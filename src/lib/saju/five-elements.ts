@@ -5,7 +5,7 @@
  * (참고: .claude/rules/saju-domain.md — 파생 계산)
  */
 
-import { EARTHLY_BRANCH_PRIMARY_STEM, EARTHLY_BRANCHES, HEAVENLY_STEMS } from "./constants";
+import { EARTHLY_BRANCH_PRIMARY_STEM, EARTHLY_BRANCHES } from "./constants";
 import type { EarthlyBranch, FiveElement, HeavenlyStem, YinYang } from "@/types/saju";
 
 /**
@@ -86,11 +86,3 @@ export function generates(a: FiveElement, b: FiveElement): boolean {
 export function overcomes(a: FiveElement, b: FiveElement): boolean {
   return FIVE_ELEMENT_OVERCOMES[a] === b;
 }
-
-/** 상수 정합성 보장용(개발 시점 점검). 모든 간지가 매핑을 갖는지. */
-export const ALL_STEMS_MAPPED = HEAVENLY_STEMS.every(
-  (s) => s in HEAVENLY_STEM_ELEMENT && s in HEAVENLY_STEM_YIN_YANG,
-);
-export const ALL_BRANCHES_MAPPED = EARTHLY_BRANCHES.every(
-  (b) => b in EARTHLY_BRANCH_ELEMENT && b in EARTHLY_BRANCH_YIN_YANG,
-);

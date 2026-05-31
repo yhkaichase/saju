@@ -83,3 +83,27 @@ describe("calculateMonthPillar — 골든 케이스", () => {
     });
   }
 });
+
+/**
+ * 오호둔(五虎遁) — 연간 5쌍별 寅월 천간 전수 검증.
+ * 입춘 직후(2/20)는 확실히 寅월이므로 연간만 바꿔 寅월 천간을 확인.
+ * 甲己→丙寅, 乙庚→戊寅, 丙辛→庚寅, 丁壬→壬寅, 戊癸→甲寅.
+ */
+describe("calculateMonthPillar — 오호둔 연간 5쌍 (寅월)", () => {
+  const cases: Array<[year: number, stem: string]> = [
+    [2024, "丙"], // 甲辰년
+    [2025, "戊"], // 乙巳년
+    [2026, "庚"], // 丙午년
+    [2027, "壬"], // 丁未년
+    [2028, "甲"], // 戊申년
+  ];
+
+  for (const [year, stem] of cases) {
+    it(`${year}년 2/20 寅월 천간 = ${stem}`, () => {
+      expect(calculateMonthPillar({ year, month: 2, day: 20, hour: 12 })).toEqual({
+        heavenlyStem: stem,
+        earthlyBranch: "寅",
+      });
+    });
+  }
+});

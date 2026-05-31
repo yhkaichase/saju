@@ -68,6 +68,31 @@ export function sexagenaryIndexOf(stem: HeavenlyStem, branch: EarthlyBranch): nu
   );
 }
 
+/** 천간 개수(10). 십신·오서둔·오호둔 등 모듈러 연산에 사용. */
+export const HEAVENLY_STEM_COUNT = 10;
+/** 지지 개수(12). */
+export const EARTHLY_BRANCH_COUNT = 12;
+/** 60갑자 주기 길이(60). */
+export const SEXAGENARY_LENGTH = 60;
+
+/**
+ * 음수도 0~(n-1)로 떨어지는 모듈러. JS의 `%`는 음수에서 음수를 내므로 간지
+ * 순환(역행 대운 등)에서 `((x % n) + n) % n` 패턴이 반복되는 것을 한 곳에 모읍니다.
+ */
+export function mod(value: number, modulus: number): number {
+  return ((value % modulus) + modulus) % modulus;
+}
+
+/** 천간의 0~9 인덱스. 유효하지 않으면 -1. */
+export function stemIndex(stem: HeavenlyStem): number {
+  return HEAVENLY_STEMS.indexOf(stem);
+}
+
+/** 지지의 0~11 인덱스. 유효하지 않으면 -1. */
+export function branchIndex(branch: EarthlyBranch): number {
+  return EARTHLY_BRANCHES.indexOf(branch);
+}
+
 /**
  * 지지(地支)의 본기(本氣) 천간 — 지장간(支藏干) 중 대표 기운.
  *

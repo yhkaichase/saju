@@ -2,8 +2,6 @@ import { describe, expect, it } from "vitest";
 
 import { EARTHLY_BRANCHES, HEAVENLY_STEMS } from "./constants";
 import {
-  ALL_BRANCHES_MAPPED,
-  ALL_STEMS_MAPPED,
   EARTHLY_BRANCH_ELEMENT,
   EARTHLY_BRANCH_YIN_YANG,
   FIVE_ELEMENT_GENERATES,
@@ -16,8 +14,12 @@ import {
 
 describe("오행/음양 매핑", () => {
   it("천간 10개·지지 12개 모두 매핑됨", () => {
-    expect(ALL_STEMS_MAPPED).toBe(true);
-    expect(ALL_BRANCHES_MAPPED).toBe(true);
+    expect(HEAVENLY_STEMS.every((s) => HEAVENLY_STEM_ELEMENT[s] && HEAVENLY_STEM_YIN_YANG[s])).toBe(
+      true,
+    );
+    expect(
+      EARTHLY_BRANCHES.every((b) => EARTHLY_BRANCH_ELEMENT[b] && EARTHLY_BRANCH_YIN_YANG[b]),
+    ).toBe(true);
   });
 
   it("천간 오행: 甲乙木 丙丁火 戊己土 庚辛金 壬癸水", () => {

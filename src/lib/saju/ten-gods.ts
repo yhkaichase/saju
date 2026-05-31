@@ -49,8 +49,12 @@ function tenGodPairFor(dayElement: FiveElement, targetElement: FiveElement): Ten
   if (FIVE_ELEMENT_OVERCOMES[targetElement] === dayElement) {
     return ["偏官", "正官"]; // 官殺 (일간을 剋)
   }
-  // 남은 경우는 대상이 일간을 生(印).
-  return ["偏印", "正印"]; // 印
+  // 다섯 번째이자 마지막 관계: 대상이 일간을 生(印). 오행은 닫혀 있어 이 외의
+  // 관계는 존재하지 않지만, 상수 변경 시 조용한 오류를 막기 위해 방어적으로 확인.
+  if (FIVE_ELEMENT_GENERATES[targetElement] === dayElement) {
+    return ["偏印", "正印"]; // 印
+  }
+  throw new Error(`오행 관계 판정 실패: day=${dayElement}, target=${targetElement}`);
 }
 
 /** 오행·음양으로부터 십신을 구하는 코어. */

@@ -27,7 +27,7 @@
  */
 
 import { gregorianToJulianDayNumber } from "@/lib/calendar/julian-day";
-import { SEXAGENARY_CYCLE } from "@/lib/saju/constants";
+import { mod, SEXAGENARY_CYCLE, SEXAGENARY_LENGTH } from "@/lib/saju/constants";
 import type { SexagenaryPair } from "@/types/saju";
 
 /** 일주 경계 정책. 자정 기준(기본) / 자시(23:00) 기준. */
@@ -54,9 +54,6 @@ export interface DayPillarInput {
   dayBoundaryPolicy?: DayBoundaryPolicy;
 }
 
-/** 60갑자 길이 — 매직 넘버 추출. */
-const SEXAGENARY_LENGTH = 60;
-
 /**
  * 일주 인덱스를 결정하는 offset.
  * 1949-10-01(甲子, index 0)을 만족: (2433191 + 49) % 60 = 0.
@@ -79,8 +76,5 @@ export function calculateDayPillar(input: DayPillarInput): SexagenaryPair {
     jdn += 1;
   }
 
-  const index =
-    (((jdn + DAY_PILLAR_OFFSET) % SEXAGENARY_LENGTH) + SEXAGENARY_LENGTH) % SEXAGENARY_LENGTH;
-
-  return SEXAGENARY_CYCLE[index];
+  return SEXAGENARY_CYCLE[mod(jdn + DAY_PILLAR_OFFSET, SEXAGENARY_LENGTH)];
 }

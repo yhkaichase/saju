@@ -25,7 +25,7 @@
 
 import { kstWallClockToUtc } from "@/lib/calendar/timezone";
 import { nextSolarTermInstant, previousSolarTermInstant } from "@/lib/calendar/solar-terms";
-import { SEXAGENARY_CYCLE, sexagenaryIndexOf } from "./constants";
+import { mod, SEXAGENARY_CYCLE, SEXAGENARY_LENGTH, sexagenaryIndexOf } from "./constants";
 import type { DayPillarInput } from "./day-pillar";
 import { HEAVENLY_STEM_YIN_YANG } from "./five-elements";
 import { calculateMonthPillar } from "./month-pillar";
@@ -61,7 +61,6 @@ export interface MajorFortuneResult {
   periods: MajorFortunePeriod[];
 }
 
-const SEXAGENARY_LENGTH = 60;
 const DAYS_PER_FORTUNE_YEAR = 3; // 3일 = 1년
 const MS_PER_DAY = 24 * 3600 * 1000;
 const DEFAULT_PERIOD_COUNT = 8;
@@ -96,11 +95,13 @@ export function calculateMajorFortune(
   const direction = fortuneDirection(yearPillar.heavenlyStem, gender);
 
   // 대운수: 출생 → (순행)다음 / (역행)직전 절입까지의 일수 ÷ 3.
+  // 방향별로 (미래-출생)/(출생-과거)를 명시적으로 계산해 항상 양수가 되게 한다.
   const birthUtc = kstWallClockToUtc(year, month, day, hour, minute);
-  const boundaryUtc =
-    direction === "forward" ? nextSolarTermInstant(birthUtc) : previousSolarTermInstant(birthUtc);
-  const diffDays = Math.abs(boundaryUtc.getTime() - birthUtc.getTime()) / MS_PER_DAY;
-  const fortuneStartAgePrecise = diffDays / DAYS_PER_FORTUNE_YEAR;
+  const diffMs =
+    direction === "forward"
+      ? nextSolarTermInstant(birthUtc).getTime() - birthUtc.getTime()
+      : birthUtc.getTime() - previousSolarTermInstant(birthUtc).getTime();
+  const fortuneStartAgePrecise = diffMs / MS_PER_DAY / DAYS_PER_FORTUNE_YEAR;
   const fortuneStartAge = applyRounding(fortuneStartAgePrecise, rounding);
 
   // 간지 나열: 월주의 다음(순행)/이전(역행)부터 ±1.
@@ -108,11 +109,9 @@ export function calculateMajorFortune(
   const sign = direction === "forward" ? 1 : -1;
   const periods: MajorFortunePeriod[] = [];
   for (let n = 1; n <= periodCount; n++) {
-    const idx =
-      (((monthIndex + sign * n) % SEXAGENARY_LENGTH) + SEXAGENARY_LENGTH) % SEXAGENARY_LENGTH;
     periods.push({
       startAge: fortuneStartAge + (n - 1) * 10,
-      pillar: SEXAGENARY_CYCLE[idx],
+      pillar: SEXAGENARY_CYCLE[mod(monthIndex + sign * n, SEXAGENARY_LENGTH)],
     });
   }
 

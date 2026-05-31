@@ -60,6 +60,31 @@ describe("calculateMajorFortune — 골든", () => {
     expect(r.periods[2].startAge).toBe(27);
   });
 
+  // 陰年(乙巳년) 명식 — 역방향 60갑자 wrap을 포함한 end-to-end 검증.
+  const yinBase = { year: 2025, month: 6, day: 15, hour: 12, minute: 30 } as const;
+
+  it("陰男(역행): 乙巳년 월주 壬午 이전부터 辛巳·庚辰·己卯, 대운수 3", () => {
+    const r = calculateMajorFortune({ ...yinBase, gender: "male" });
+    expect(r.direction).toBe("backward");
+    expect(r.fortuneStartAge).toBe(3);
+    expect(r.periods.slice(0, 3).map((p) => p.pillar)).toEqual([
+      { heavenlyStem: "辛", earthlyBranch: "巳" },
+      { heavenlyStem: "庚", earthlyBranch: "辰" },
+      { heavenlyStem: "己", earthlyBranch: "卯" },
+    ]);
+  });
+
+  it("陰女(순행): 乙巳년 월주 壬午 다음부터 癸未·甲申·乙酉, 대운수 7", () => {
+    const r = calculateMajorFortune({ ...yinBase, gender: "female" });
+    expect(r.direction).toBe("forward");
+    expect(r.fortuneStartAge).toBe(7);
+    expect(r.periods.slice(0, 3).map((p) => p.pillar)).toEqual([
+      { heavenlyStem: "癸", earthlyBranch: "未" },
+      { heavenlyStem: "甲", earthlyBranch: "申" },
+      { heavenlyStem: "乙", earthlyBranch: "酉" },
+    ]);
+  });
+
   it("반올림 정책 floor/ceil 옵션이 적용된다", () => {
     const floor = calculateMajorFortune({
       ...base,
