@@ -58,6 +58,12 @@ src/
       five-elements.ts#   오행 매핑·생극 (지지는 본기에서 파생)
       ten-gods.ts     #   십신 (일간 기준, 본기 음양)
       major-fortune.ts#   대운 (순행/역행·대운수·간지 나열)
+      interpretation/ #   뜻풀이 — 계산 위에 얹는 해석 레이어
+        day-master.ts #     일간 10천간 성향 통설
+        ten-gods.ts   #     십신 10종 의미 통설
+        five-elements.ts#   오행 5종 상징 통설
+        index.ts      #     buildInterpretation (정적·결정론적 조립)
+        prompt.ts     #     AI 종합해석용 프롬프트 빌더(순수)
     calendar/         # 음양력 변환·절기 계산
       julian-day.ts   #   정수 JDN (Fliegel–Van Flandern)
       solar-terms.ts  #   절기 황경·절입 시각 (astronomy-engine)
@@ -70,6 +76,10 @@ src/
 ### 구현 현황
 
 - ✅ 4기둥(연·월·일·시) + 파생(오행·십신·대운) 전부 구현, 골든 테스트 통과.
+- ✅ 뜻풀이 레이어: **A 정적 해석**(일간·오행·십신·대운, 결정론적·골든 고정) +
+  **B AI 종합해석**(`POST /api/saju/interpret`, Claude 스트리밍, 버튼 호출).
+  B는 `ANTHROPIC_API_KEY` 환경변수가 있어야 동작하며(없으면 503), 모델은
+  `ANTHROPIC_MODEL`(기본 `claude-sonnet-4-6`)로 바꿀 수 있습니다.
 - ⚠️ **미해결(KASI 대조 필요)**: ① 절기/입춘 절입 시각의 분 단위 정답,
   ② 대운수(大運數) 반올림·0시작 경계 관례. astronomy-engine 계산값은 공표
   만세력과 ±1분 수준이나, 한국 정답 기준인 KASI 공식값과 육안 대조가 남아 있습니다.
