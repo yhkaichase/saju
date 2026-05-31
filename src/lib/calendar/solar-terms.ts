@@ -19,7 +19,7 @@
  * (참고: .claude/rules/saju-domain.md, ./README.md)
  */
 
-import { SearchSunLongitude } from "astronomy-engine";
+import { SearchSunLongitude, SunPosition } from "astronomy-engine";
 
 /**
  * 사주 월주(月柱)에 쓰는 12절기(節) — 각 절기가 시작하는 태양황경(도).
@@ -58,4 +58,34 @@ export function findSolarLongitudeTime(
 ): Date | null {
   const result = SearchSunLongitude(targetLongitude, startTime, limitDays);
   return result ? result.date : null;
+}
+
+/** 입춘(立春) 태양황경 — 연주(年柱)의 경계이자 寅月의 시작. */
+export const IPCHUN_LONGITUDE = 315;
+
+/**
+ * 주어진 UTC 시각의 태양 겉보기 황경(도, 0~360)을 반환합니다.
+ *
+ * 월주(月柱)의 월지(月支)는 절입 시각을 따로 탐색하지 않고 이 황경으로 즉시
+ * 구간 판정할 수 있습니다(연말/연초를 가로지르는 子월·丑월도 자연 처리).
+ */
+export function sunEclipticLongitude(time: Date): number {
+  return SunPosition(time).elon;
+}
+
+/**
+ * 해당 연도의 입춘(立春) 절입 시각(UTC)을 구합니다.
+ *
+ * 입춘은 매년 양력 2/3~2/4이므로 1/20부터 40일 범위를 탐색합니다.
+ * 연주(年柱)는 이 시각(이상이면 신년)으로 경계를 가릅니다.
+ *
+ * @throws 탐색 실패 시(정상 입력에서는 발생하지 않음).
+ */
+export function ipchunInstantUtc(year: number): Date {
+  const start = new Date(Date.UTC(year, 0, 20));
+  const result = SearchSunLongitude(IPCHUN_LONGITUDE, start, 40);
+  if (result === null) {
+    throw new Error(`입춘 시각 탐색 실패: year=${year}`);
+  }
+  return result.date;
 }

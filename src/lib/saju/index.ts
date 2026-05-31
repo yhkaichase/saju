@@ -10,11 +10,11 @@
 export * from "./constants";
 export * from "./day-pillar";
 export * from "./hour-pillar";
+export * from "./year-pillar";
+export * from "./month-pillar";
+export * from "./four-pillars";
 
-// 구현 완료: 일주(./day-pillar), 시주(./hour-pillar) — 천문 계산 불필요.
+// 4기둥(연·월·일·시) 모두 구현 완료. calculateFourPillars 로 통합 계산.
 //
-// TODO(근거 필요): 아래는 절기·음양력 데이터가 갖춰진 뒤 골든 테스트와 함께 구현.
-//   - calculateYearPillar  : 입춘 기준 연주
-//   - calculateMonthPillar : 12절기 기준 월주 (오호둔/五虎遁)
-//   - calculateFourPillars : 위를 조합한 최종 사주
+// TODO(파생 계산): 오행(五行) 분류·생극, 십신(十神), 대운(大運) 순행/역행·대운수.
 // 규칙: .claude/rules/saju-domain.md
