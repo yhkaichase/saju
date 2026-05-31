@@ -64,6 +64,13 @@ export function findSolarLongitudeTime(
 export const IPCHUN_LONGITUDE = 315;
 
 /**
+ * 12절(節)의 황경 간격(도). 모든 節은 황경 ≡ 15 (mod 30)에 위치합니다.
+ * (입춘 315°, 경칩 345°, 청명 15° … 모두 30으로 나눈 나머지가 15)
+ */
+const SOLAR_TERM_STEP = 30;
+const SOLAR_TERM_PHASE = 15;
+
+/**
  * 주어진 UTC 시각의 태양 겉보기 황경(도, 0~360)을 반환합니다.
  *
  * 월주(月柱)의 월지(月支)는 절입 시각을 따로 탐색하지 않고 이 황경으로 즉시
@@ -86,6 +93,43 @@ export function ipchunInstantUtc(year: number): Date {
   const result = SearchSunLongitude(IPCHUN_LONGITUDE, start, 40);
   if (result === null) {
     throw new Error(`입춘 시각 탐색 실패: year=${year}`);
+  }
+  return result.date;
+}
+
+/** 한 절기 간격 ~30.4일을 안전하게 덮는 탐색 한도(일). */
+const TERM_SEARCH_LIMIT_DAYS = 40;
+
+/**
+ * 주어진 시각(UTC) **직후**에 오는 12절(節)의 절입 시각(UTC)을 구합니다.
+ * 대운(大運) 순행 시 대운수 계산에 사용합니다.
+ */
+export function nextSolarTermInstant(from: Date): Date {
+  const currentLon = sunEclipticLongitude(from);
+  // 현재 황경 이후 가장 가까운 (≡15 mod 30) 황경.
+  const k = Math.floor((currentLon - SOLAR_TERM_PHASE) / SOLAR_TERM_STEP) + 1;
+  const targetLon = (((k * SOLAR_TERM_STEP + SOLAR_TERM_PHASE) % 360) + 360) % 360;
+  const result = SearchSunLongitude(targetLon, from, TERM_SEARCH_LIMIT_DAYS);
+  if (result === null) {
+    throw new Error(`다음 절기 탐색 실패: from=${from.toISOString()}`);
+  }
+  return result.date;
+}
+
+/**
+ * 주어진 시각(UTC) **직전**의 12절(節) 절입 시각(UTC)을 구합니다.
+ * 대운(大運) 역행 시 대운수 계산에 사용합니다.
+ */
+export function previousSolarTermInstant(from: Date): Date {
+  const currentLon = sunEclipticLongitude(from);
+  // 현재 황경 이하 가장 가까운 (≡15 mod 30) 황경.
+  const k = Math.floor((currentLon - SOLAR_TERM_PHASE) / SOLAR_TERM_STEP);
+  const targetLon = (((k * SOLAR_TERM_STEP + SOLAR_TERM_PHASE) % 360) + 360) % 360;
+  // 직전 절기는 최대 ~31일 전이므로 탐색 시작을 넉넉히 앞으로 둔다.
+  const start = new Date(from.getTime() - TERM_SEARCH_LIMIT_DAYS * 24 * 3600 * 1000);
+  const result = SearchSunLongitude(targetLon, start, TERM_SEARCH_LIMIT_DAYS + 10);
+  if (result === null) {
+    throw new Error(`이전 절기 탐색 실패: from=${from.toISOString()}`);
   }
   return result.date;
 }

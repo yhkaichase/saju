@@ -13,8 +13,12 @@ export * from "./hour-pillar";
 export * from "./year-pillar";
 export * from "./month-pillar";
 export * from "./four-pillars";
+export * from "./five-elements";
+export * from "./ten-gods";
+export * from "./major-fortune";
 
-// 4기둥(연·월·일·시) 모두 구현 완료. calculateFourPillars 로 통합 계산.
+// 4기둥(연·월·일·시) + 파생(오행·십신·대운) 모두 구현 완료.
 //
-// TODO(파생 계산): 오행(五行) 분류·생극, 십신(十神), 대운(大運) 순행/역행·대운수.
+// 잔여 TODO(정확성): 대운수(大運數) 반올림/0시작 경계 관례를 KASI 공식
+// 만세력과 골든 대조해 확정. (현재 기본 round + 정밀값 병행 보관)
 // 규칙: .claude/rules/saju-domain.md

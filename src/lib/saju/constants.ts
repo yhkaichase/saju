@@ -67,3 +67,28 @@ export function sexagenaryIndexOf(stem: HeavenlyStem, branch: EarthlyBranch): nu
     (pair) => pair.heavenlyStem === stem && pair.earthlyBranch === branch,
   );
 }
+
+/**
+ * 지지(地支)의 본기(本氣) 천간 — 지장간(支藏干) 중 대표 기운.
+ *
+ * 지지의 오행·음양은 이 본기에서 파생합니다(SSOT). 특히 십신(十神) 계산의
+ * 음양 비교는 지지를 단순 인덱스 짝/홀(체體)로 보면 子午巳亥에서 틀리므로,
+ * 반드시 본기 천간의 음양(용用)을 써야 합니다.
+ *   - 子→癸(陰水), 午→丁(陰火), 巳→丙(陽火), 亥→壬(陽水)가 체와 갈리는 지점.
+ *
+ * 근거: 명리 체용론(體用論). .claude/rules/saju-domain.md (십신 — 일간 기준 관계).
+ */
+export const EARTHLY_BRANCH_PRIMARY_STEM: Readonly<Record<EarthlyBranch, HeavenlyStem>> = {
+  子: "癸",
+  丑: "己",
+  寅: "甲",
+  卯: "乙",
+  辰: "戊",
+  巳: "丙",
+  午: "丁",
+  未: "己",
+  申: "庚",
+  酉: "辛",
+  戌: "戊",
+  亥: "壬",
+};

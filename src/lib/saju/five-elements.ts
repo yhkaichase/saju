@@ -5,7 +5,7 @@
  * (참고: .claude/rules/saju-domain.md — 파생 계산)
  */
 
-import { EARTHLY_BRANCHES, HEAVENLY_STEMS } from "./constants";
+import { EARTHLY_BRANCH_PRIMARY_STEM, EARTHLY_BRANCHES, HEAVENLY_STEMS } from "./constants";
 import type { EarthlyBranch, FiveElement, HeavenlyStem, YinYang } from "@/types/saju";
 
 /**
@@ -40,42 +40,24 @@ export const HEAVENLY_STEM_YIN_YANG: Readonly<Record<HeavenlyStem, YinYang>> = {
 };
 
 /**
- * 지지(地支)의 오행. 寅卯=木, 巳午=火, 申酉=金, 亥子=水,
- * 辰戌丑未=土(土는 네 계절 끝에 분산).
+ * 지지(地支)의 오행 — **본기(本氣) 천간에서 파생**(SSOT).
+ * 결과: 寅卯=木, 巳午=火, 申酉=金, 亥子=水, 辰戌丑未=土.
  */
-export const EARTHLY_BRANCH_ELEMENT: Readonly<Record<EarthlyBranch, FiveElement>> = {
-  子: "水",
-  丑: "土",
-  寅: "木",
-  卯: "木",
-  辰: "土",
-  巳: "火",
-  午: "火",
-  未: "土",
-  申: "金",
-  酉: "金",
-  戌: "土",
-  亥: "水",
-};
+export const EARTHLY_BRANCH_ELEMENT: Readonly<Record<EarthlyBranch, FiveElement>> =
+  Object.fromEntries(
+    EARTHLY_BRANCHES.map((b) => [b, HEAVENLY_STEM_ELEMENT[EARTHLY_BRANCH_PRIMARY_STEM[b]]]),
+  ) as Record<EarthlyBranch, FiveElement>;
 
 /**
- * 지지의 음양(체용 중 "체"의 통상 분류). 子寅辰午申戌=陽, 丑卯巳未酉亥=陰.
- * (인덱스 짝수=陽, 홀수=陰)
+ * 지지의 음양 — **본기 천간의 음양(용用)**. 십신(十神) 계산에는 이 값을 쓰세요.
+ *
+ * ⚠️ 자리 순서(체體, idx%2)와는 子午巳亥에서 갈립니다:
+ *   子=陰水, 午=陰火, 巳=陽火, 亥=陽水 (체로 보면 반대).
+ * 십신 음양 비교에 체를 쓰면 이 네 글자에서 오답이 나므로 반드시 본기를 사용합니다.
  */
-export const EARTHLY_BRANCH_YIN_YANG: Readonly<Record<EarthlyBranch, YinYang>> = {
-  子: "陽",
-  丑: "陰",
-  寅: "陽",
-  卯: "陰",
-  辰: "陽",
-  巳: "陰",
-  午: "陽",
-  未: "陰",
-  申: "陽",
-  酉: "陰",
-  戌: "陽",
-  亥: "陰",
-};
+export const EARTHLY_BRANCH_YIN_YANG: Readonly<Record<EarthlyBranch, YinYang>> = Object.fromEntries(
+  EARTHLY_BRANCHES.map((b) => [b, HEAVENLY_STEM_YIN_YANG[EARTHLY_BRANCH_PRIMARY_STEM[b]]]),
+) as Record<EarthlyBranch, YinYang>;
 
 /** 오행 상생(相生): 木→火→土→金→水→木. key가 value를 생(生)함. */
 export const FIVE_ELEMENT_GENERATES: Readonly<Record<FiveElement, FiveElement>> = {
