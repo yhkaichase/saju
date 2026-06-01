@@ -13,7 +13,7 @@ interface FormState {
 }
 
 const DEFAULT_STATE: FormState = {
-  date: "2019-01-01",
+  date: "2019-09-07",
   time: "14:50", // 오후 02:50
   gender: "male",
 };
