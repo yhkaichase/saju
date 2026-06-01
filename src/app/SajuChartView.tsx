@@ -3,7 +3,10 @@
  */
 
 import { HEAVENLY_STEM_ELEMENT } from "@/lib/saju/five-elements";
+import { buildInterpretation } from "@/lib/saju/interpretation";
 import type { BranchCell, PillarView, SajuChart, StemCell } from "@/lib/saju/saju-chart";
+import { AiReading } from "./AiReading";
+import { InterpretationView } from "./InterpretationView";
 import { BRANCH_READING, ELEMENT_STYLE, STEM_READING, TEN_GOD_READING } from "./saju-labels";
 
 const PILLAR_TITLES: Array<{
@@ -66,6 +69,7 @@ function PillarColumn({
 
 export function SajuChartView({ chart }: { chart: SajuChart }) {
   const { direction, fortuneStartAge, periods } = chart.majorFortune;
+  const interpretation = buildInterpretation(chart);
 
   return (
     <div className="flex w-full flex-col gap-8">
@@ -101,6 +105,10 @@ export function SajuChartView({ chart }: { chart: SajuChart }) {
           })}
         </div>
       </section>
+
+      <InterpretationView interpretation={interpretation} />
+
+      <AiReading chart={chart} />
     </div>
   );
 }
