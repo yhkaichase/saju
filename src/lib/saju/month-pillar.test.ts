@@ -25,9 +25,9 @@ describe("sunLongitudeToMonthBranchIndex — 절기 기준 월지", () => {
 /**
  * 골든 테스트 — 월주(月柱).
  *
- * 닫힌 공식 monthStemIndex = (yearStemIndex*2 + monthBranchIndex) % 10 +
- * 입춘 경계 연간 SSOT를 end-to-end 검증. 절입 시각은 astronomy-engine 계산값.
- * (커밋 전 KASI 만세력으로 G2·G4 육안 대조 권장)
+ * 오호둔(寅월 천간 + 寅부터 개월수 순행) + 입춘 경계 연간 SSOT를 end-to-end 검증.
+ * 子·丑월(G1·G6)은 12지지 래핑이 필요한 회귀 케이스 — 정답은 오호둔 가결로 독립 검산.
+ * 절입 시각은 astronomy-engine 계산값. (커밋 전 KASI 만세력으로 G1·G6 육안 대조 권장)
  */
 describe("calculateMonthPillar — 골든 케이스", () => {
   const cases: Array<{
@@ -37,9 +37,10 @@ describe("calculateMonthPillar — 골든 케이스", () => {
     branch: string;
   }> = [
     {
-      label: "G1 2024-02-04 17:00 입춘 직전 → 癸丑 (전년 癸卯 + 丑월)",
+      // 戊癸년 오호둔: 甲寅,…,甲子,乙丑 → 丑월 = 乙丑. (癸卯년, 입춘 전이라 전년 기준)
+      label: "G1 2024-02-04 17:00 입춘 직전 → 乙丑 (전년 癸卯 + 丑월)",
       input: { year: 2024, month: 2, day: 4, hour: 17, minute: 0 },
-      stem: "癸",
+      stem: "乙",
       branch: "丑",
     },
     {
@@ -67,9 +68,10 @@ describe("calculateMonthPillar — 골든 케이스", () => {
       branch: "午",
     },
     {
-      label: "G6 2023-12-30 12:00 → 壬子 (癸卯년 子월, 연말 걸침)",
+      // 戊癸년 오호둔: 甲寅,…,甲子 → 子월 = 甲子. (癸卯년, 대설~소한 사이)
+      label: "G6 2023-12-30 12:00 → 甲子 (癸卯년 子월, 연말 걸침)",
       input: { year: 2023, month: 12, day: 30, hour: 12 },
-      stem: "壬",
+      stem: "甲",
       branch: "子",
     },
   ];
