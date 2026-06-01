@@ -7,7 +7,7 @@ export default function Home() {
         <h1 className="text-3xl font-semibold tracking-tight">사주 (四柱)</h1>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
           생년월일시를 입력하면 절기·60갑자 기반으로 사주 명식과 오행·십신·대운을 계산하고, 뜻풀이를
-          제공합니다. (진태양시 보정 적용)
+          제공합니다. (한국 표준시 기준)
         </p>
       </header>
 
