@@ -8,10 +8,15 @@
  *   (子월·丑월이 양력 연말~연초를 가로질러도 황경 기반이라 자연 처리됨)
  *
  * ## 월간(月干) = 오호둔(五虎遁)
- *   연간(年干)에 따라 寅月의 천간이 정해지고 순행합니다.
- *   닫힌 공식(전수 검증, hour-pillar와 동형):
- *     monthStemIndex = (yearStemIndex * 2 + monthBranchIndex) % 10
+ *   연간(年干)에 따라 寅月의 천간이 정해지고, 寅월부터 순행합니다.
+ *     寅月천간index = (yearStemIndex * 2 + 2) % 10
+ *     monthStemIndex = (寅月천간index + 寅부터의_개월수) % 10
  *   - 甲己년 寅=丙, 乙庚년 寅=戊, 丙辛년 寅=庚, 丁壬년 寅=壬, 戊癸년 寅=甲.
+ *
+ *   ⚠️ "寅부터의 개월수"는 **12지지 래핑**이 필요합니다. 子(index 0)·丑(index 1)월은
+ *   寅 기준 각각 10·11번째 달이므로, 단순 `(yearStemIndex*2 + monthBranchIndex)`
+ *   공식은 子·丑월에서 결과가 2만큼 어긋납니다(寅~亥월에서는 우연히 일치).
+ *   예) 戊癸년 丑月 정답 乙丑(乙) — 단순식은 癸丑(癸)을 내던 과거 버그.
  *
  * ## 연간 SSOT
  *   월간의 기준 연간은 **입춘 경계로 확정된 연주(年柱)의 연간**입니다(역법 연도 Y
@@ -65,9 +70,13 @@ export function calculateMonthPillar(input: MonthPillarInput): SexagenaryPair {
   const monthBranchIndex = sunLongitudeToMonthBranchIndex(sunEclipticLongitude(birthUtc));
 
   // 월간: 입춘 보정된 연주의 연간을 SSOT로 오호둔 적용.
+  // 寅월 천간에서 寅부터의 개월수만큼 순행. 子·丑월(寅 기준 10·11번째)은 12지지
+  // 래핑이 필요하므로 monthBranchIndex를 그대로 더하지 않는다.
   const yearPillar = calculateYearPillar(input as YearPillarInput);
   const yearStemIndex = stemIndex(yearPillar.heavenlyStem);
-  const monthStemIndex = (yearStemIndex * 2 + monthBranchIndex) % HEAVENLY_STEM_COUNT;
+  const yinMonthStemIndex = mod(yearStemIndex * 2 + YIN_BRANCH_INDEX, HEAVENLY_STEM_COUNT);
+  const monthsFromYin = mod(monthBranchIndex - YIN_BRANCH_INDEX, EARTHLY_BRANCH_COUNT);
+  const monthStemIndex = mod(yinMonthStemIndex + monthsFromYin, HEAVENLY_STEM_COUNT);
 
   return {
     heavenlyStem: HEAVENLY_STEMS[monthStemIndex],

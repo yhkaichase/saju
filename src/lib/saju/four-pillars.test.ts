@@ -46,6 +46,7 @@ describe("calculateFourPillars", () => {
       minute: 0,
     });
     expect(result.yearPillar).toEqual({ heavenlyStem: "癸", earthlyBranch: "卯" });
-    expect(result.monthPillar).toEqual({ heavenlyStem: "癸", earthlyBranch: "丑" });
+    // 癸卯년 丑월: 戊癸년 오호둔(甲寅頭) → 丑월 = 乙丑.
+    expect(result.monthPillar).toEqual({ heavenlyStem: "乙", earthlyBranch: "丑" });
   });
 });
