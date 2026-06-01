@@ -67,9 +67,14 @@ function PillarColumn({
   );
 }
 
+function hhmm(t: { hour: number; minute: number }): string {
+  return `${String(t.hour).padStart(2, "0")}:${String(t.minute).padStart(2, "0")}`;
+}
+
 export function SajuChartView({ chart }: { chart: SajuChart }) {
   const { direction, fortuneStartAge, periods } = chart.majorFortune;
   const interpretation = buildInterpretation(chart);
+  const { standard, corrected, offsetMinutes } = chart.solarTime;
 
   return (
     <div className="flex w-full flex-col gap-8">
@@ -80,6 +85,10 @@ export function SajuChartView({ chart }: { chart: SajuChart }) {
             <PillarColumn key={key} title={label} pillar={chart[key]} isDay={key === "day"} />
           ))}
         </div>
+        <p className="mt-3 text-xs text-zinc-500 dark:text-zinc-400">
+          진태양시 보정: 표준시 {hhmm(standard)} → {hhmm(corrected)} (서울 기준 {offsetMinutes}분).
+          시주·일주는 보정된 시각으로 계산했습니다.
+        </p>
       </section>
 
       <section>
