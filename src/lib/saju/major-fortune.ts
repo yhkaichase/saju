@@ -17,8 +17,9 @@
  *
  *   ⚠️ 반올림/0시작 관례는 학파·만세력별로 갈립니다(에이전트 검증). 여기서는
  *   **정밀 실수값(fortuneStartAgePrecise)을 함께 보관**하고, 표시용 정수는
- *   기본 정책 "반올림(round)"으로 산출합니다. 정확한 경계 정책은 KASI 공식
- *   만세력과 골든 대조 후 확정해야 합니다(미해결 TODO).
+ *   기본 정책 "내림(floor)"으로 산출합니다 — 다수 만세력이 햇수는 버리고 나머지를
+ *   개월로 표기하는 관례와 일치(예: 9.3세 → 9세). 실제 만세력(황연정 명식) 대조로
+ *   확정. ceil/round 가 필요하면 fortuneStartAgeRounding 옵션으로 바꿉니다.
  *
  * 근거: saju-domain-expert 에이전트 검증(위키백과 대운 등). .claude/rules/saju-domain.md
  */
@@ -41,7 +42,7 @@ export type FortuneStartAgeRounding = "round" | "floor" | "ceil";
 /** 대운 계산 입력 — 출생 정보(KST 벽시계) + 성별. */
 export interface MajorFortuneInput extends DayPillarInput {
   gender: Gender;
-  /** 대운수 정수 반올림 정책. 기본 "round". */
+  /** 대운수 정수 반올림 정책. 기본 "floor"(다수 만세력 관례). */
   fortuneStartAgeRounding?: FortuneStartAgeRounding;
 }
 
@@ -88,7 +89,7 @@ export function calculateMajorFortune(
   periodCount = DEFAULT_PERIOD_COUNT,
 ): MajorFortuneResult {
   const { year, month, day, hour = 0, minute = 0, gender } = input;
-  const rounding = input.fortuneStartAgeRounding ?? "round";
+  const rounding = input.fortuneStartAgeRounding ?? "floor";
 
   const yearPillar = calculateYearPillar(input as YearPillarInput);
   const monthPillar = calculateMonthPillar(input);

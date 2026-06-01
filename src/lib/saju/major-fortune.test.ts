@@ -23,8 +23,8 @@ describe("fortuneDirection — 순행/역행", () => {
  * 명식: 1984-06-15 12:30 KST (연주 甲子, 월주 庚午). 연간 甲=陽.
  * 절입 시각은 astronomy-engine 계산값. 대운수/간지는 닫힌 공식으로 산출.
  *
- * ⚠️ 대운수 반올림/0시작 경계 관례는 KASI 공식 만세력 대조 후 확정 예정.
- * 여기서는 기본 정책(round)과 정밀값을 함께 고정한다.
+ * 대운수 정수는 기본 정책 "내림(floor)" — 실제 만세력(황연정 명식, 9.3세→9세)
+ * 대조로 확정. 정밀값(fortuneStartAgePrecise)도 함께 고정한다.
  */
 describe("calculateMajorFortune — 골든", () => {
   const base = { year: 1984, month: 6, day: 15, hour: 12, minute: 30 } as const;
