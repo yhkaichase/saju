@@ -7,10 +7,11 @@
  * 명식 계산(정확성 최우선)은 결정론적 코어가 담당하고, 이 라우트는 그 결과 위에서
  * 자연어 해석만 생성합니다. 사실 수치는 프롬프트에서 고정합니다(→ prompt.ts).
  *
- * 환경변수: ANTHROPIC_API_KEY(필수), ANTHROPIC_MODEL(선택, 기본 claude-sonnet-4-6).
+ * 모델 제공자: Google Gemini API (AI Studio). 무료 티어로도 동작합니다.
+ * 환경변수: GEMINI_API_KEY(필수), GEMINI_MODEL(선택, 기본 gemini-2.5-flash).
  */
 
-import Anthropic from "@anthropic-ai/sdk";
+import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 
 import { buildInterpretationPrompt } from "@/lib/saju/interpretation/prompt";
@@ -18,14 +19,15 @@ import type { SajuChart } from "@/lib/saju/saju-chart";
 
 export const runtime = "nodejs";
 
-const DEFAULT_MODEL = "claude-sonnet-4-6";
-const MAX_TOKENS = 1500;
+const DEFAULT_MODEL = "gemini-2.5-flash";
+const MAX_OUTPUT_TOKENS = 2048;
 
 export async function POST(request: Request): Promise<Response> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  // GOOGLE_API_KEY 도 함께 허용(둘 다 Gemini API 키 관례명).
+  const apiKey = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
-      { error: "AI 해석이 설정되지 않았습니다. 서버에 ANTHROPIC_API_KEY가 필요합니다." },
+      { error: "AI 해석이 설정되지 않았습니다. 서버에 GEMINI_API_KEY가 필요합니다." },
       { status: 503 },
     );
   }
@@ -41,22 +43,25 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const { system, user } = buildInterpretationPrompt(body.chart);
-  const client = new Anthropic({ apiKey });
+  const ai = new GoogleGenAI({ apiKey });
 
   const encoder = new TextEncoder();
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        const messageStream = client.messages.stream({
-          model: process.env.ANTHROPIC_MODEL ?? DEFAULT_MODEL,
-          max_tokens: MAX_TOKENS,
-          system,
-          messages: [{ role: "user", content: user }],
+        const result = await ai.models.generateContentStream({
+          model: process.env.GEMINI_MODEL ?? DEFAULT_MODEL,
+          contents: user,
+          config: {
+            systemInstruction: system,
+            maxOutputTokens: MAX_OUTPUT_TOKENS,
+            // 사고(thinking) 토큰을 끄면 응답이 빠르고 출력 토큰 잘림을 예방한다.
+            thinkingConfig: { thinkingBudget: 0 },
+          },
         });
-        for await (const event of messageStream) {
-          if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-            controller.enqueue(encoder.encode(event.delta.text));
-          }
+        for await (const chunk of result) {
+          const text = chunk.text;
+          if (text) controller.enqueue(encoder.encode(text));
         }
         controller.close();
       } catch (err) {

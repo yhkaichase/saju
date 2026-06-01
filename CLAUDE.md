@@ -77,9 +77,10 @@ src/
 
 - ✅ 4기둥(연·월·일·시) + 파생(오행·십신·대운) 전부 구현, 골든 테스트 통과.
 - ✅ 뜻풀이 레이어: **A 정적 해석**(일간·오행·십신·대운, 결정론적·골든 고정) +
-  **B AI 종합해석**(`POST /api/saju/interpret`, Claude 스트리밍, 버튼 호출).
-  B는 `ANTHROPIC_API_KEY` 환경변수가 있어야 동작하며(없으면 503), 모델은
-  `ANTHROPIC_MODEL`(기본 `claude-sonnet-4-6`)로 바꿀 수 있습니다.
+  **B AI 종합해석**(`POST /api/saju/interpret`, Gemini 스트리밍, 버튼 호출).
+  B는 `GEMINI_API_KEY` 환경변수가 있어야 동작하며(없으면 503), 모델은
+  `GEMINI_MODEL`(기본 `gemini-2.5-flash`)로 바꿀 수 있습니다. Google AI Studio
+  무료 티어로도 동작합니다.
 - ⚠️ **미해결(KASI 대조 필요)**: ① 절기/입춘 절입 시각의 분 단위 정답,
   ② 대운수(大運數) 반올림·0시작 경계 관례. astronomy-engine 계산값은 공표
   만세력과 ±1분 수준이나, 한국 정답 기준인 KASI 공식값과 육안 대조가 남아 있습니다.
