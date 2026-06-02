@@ -71,4 +71,30 @@ describe("buildNameAnalysis — 성명학 통합", () => {
     );
     expect(sulga.sound.elements).not.toEqual(haerye.sound.elements);
   });
+
+  it("실명 골든 崔永夏(11·5·10) → 天11 人16 地15 外21 總26", () => {
+    const r = buildNameAnalysis({
+      surnameHangul: "최",
+      givenHangul: "영하",
+      surnameHanja: "崔",
+      givenHanja: "永夏",
+    });
+    expect(r.strokeAnalysis!.grids).toEqual({ cheon: 11, in: 16, ji: 15, oe: 21, chong: 26 });
+    expect(r.strokeAnalysis!.resourceElements).toEqual(["土", "水", "火"]);
+    // 발음오행 ㅊ(金)·ㅇ(土)·ㅎ(土): 土生金·비화 → 극 없음 → 길.
+    expect(r.sound.elements).toEqual(["金", "土", "土"]);
+    expect(r.sound.isAuspicious).toBe(true);
+  });
+
+  it("실명 골든 黃筵定(12·13·8) → 天12 人25 地21 外20 總33", () => {
+    const r = buildNameAnalysis({
+      surnameHangul: "황",
+      givenHangul: "연정",
+      surnameHanja: "黃",
+      givenHanja: "筵定",
+    });
+    expect(r.strokeAnalysis!.grids).toEqual({ cheon: 12, in: 25, ji: 21, oe: 20, chong: 33 });
+    // 定은 자원오행 모호 → 미상(null).
+    expect(r.strokeAnalysis!.resourceElements).toEqual(["土", "木", null]);
+  });
 });

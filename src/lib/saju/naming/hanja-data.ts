@@ -85,6 +85,10 @@ export const HANJA_TABLE: Readonly<Record<string, HanjaInfo>> = {
   娟: { strokes: 10 }, // 女3+肙7
   延: { strokes: 7 }, // 7 (늘일 연)
   贊: { strokes: 19 }, // 19
+  永: { strokes: 5, element: "水" }, // 5 (길 영, 水)
+  夏: { strokes: 10, element: "火" }, // 10 (여름 하, 火)
+  筵: { strokes: 13, element: "木" }, // 竹6+延7 (대자리 연, 竹→木)
+  定: { strokes: 8 }, // 宀3+疋5 (정할 정, 자원 모호 → 비움)
 };
 
 /** 한자 한 글자의 정보를 찾습니다. 미수록이면 null. */
