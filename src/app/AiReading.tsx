@@ -8,6 +8,7 @@
 
 import { useState } from "react";
 
+import type { NameAnalysis } from "@/lib/saju/naming";
 import type { SajuChart } from "@/lib/saju/saju-chart";
 
 type Status = "idle" | "streaming" | "done" | "error";
@@ -32,7 +33,15 @@ function renderText(text: string) {
   });
 }
 
-export function AiReading({ chart }: { chart: SajuChart }) {
+export function AiReading({
+  chart,
+  name,
+  nameAnalysis,
+}: {
+  chart: SajuChart;
+  name?: string;
+  nameAnalysis?: NameAnalysis;
+}) {
   const [status, setStatus] = useState<Status>("idle");
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +55,7 @@ export function AiReading({ chart }: { chart: SajuChart }) {
       const res = await fetch("/api/saju/interpret", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chart }),
+        body: JSON.stringify({ chart, name, nameAnalysis }),
       });
 
       if (!res.ok || !res.body) {

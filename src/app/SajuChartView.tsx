@@ -4,9 +4,11 @@
 
 import { HEAVENLY_STEM_ELEMENT } from "@/lib/saju/five-elements";
 import { buildInterpretation } from "@/lib/saju/interpretation";
+import type { NameAnalysis } from "@/lib/saju/naming";
 import type { BranchCell, PillarView, SajuChart, StemCell } from "@/lib/saju/saju-chart";
 import { AiReading } from "./AiReading";
 import { InterpretationView } from "./InterpretationView";
+import { NameAnalysisView } from "./NameAnalysisView";
 import { BRANCH_READING, ELEMENT_STYLE, STEM_READING, TEN_GOD_READING } from "./saju-labels";
 
 const PILLAR_TITLES: Array<{
@@ -67,7 +69,15 @@ function PillarColumn({
   );
 }
 
-export function SajuChartView({ chart }: { chart: SajuChart }) {
+export function SajuChartView({
+  chart,
+  nameAnalysis,
+  personName,
+}: {
+  chart: SajuChart;
+  nameAnalysis?: NameAnalysis | null;
+  personName?: string;
+}) {
   const { direction, fortuneStartAge, periods } = chart.majorFortune;
   const interpretation = buildInterpretation(chart);
 
@@ -108,7 +118,9 @@ export function SajuChartView({ chart }: { chart: SajuChart }) {
 
       <InterpretationView interpretation={interpretation} />
 
-      <AiReading chart={chart} />
+      {nameAnalysis && <NameAnalysisView analysis={nameAnalysis} />}
+
+      <AiReading chart={chart} name={personName} nameAnalysis={nameAnalysis ?? undefined} />
     </div>
   );
 }

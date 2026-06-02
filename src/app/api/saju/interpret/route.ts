@@ -15,6 +15,7 @@ import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 
 import { buildInterpretationPrompt } from "@/lib/saju/interpretation/prompt";
+import type { NameAnalysis } from "@/lib/saju/naming";
 import type { SajuChart } from "@/lib/saju/saju-chart";
 
 export const runtime = "nodejs";
@@ -32,9 +33,13 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  let body: { chart?: SajuChart };
+  let body: { chart?: SajuChart; name?: string; nameAnalysis?: NameAnalysis };
   try {
-    body = (await request.json()) as { chart?: SajuChart };
+    body = (await request.json()) as {
+      chart?: SajuChart;
+      name?: string;
+      nameAnalysis?: NameAnalysis;
+    };
   } catch {
     return NextResponse.json({ error: "유효한 JSON 본문이 필요합니다." }, { status: 400 });
   }
@@ -42,7 +47,10 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.json({ error: "명식(chart)이 필요합니다." }, { status: 400 });
   }
 
-  const { system, user } = buildInterpretationPrompt(body.chart);
+  const { system, user } = buildInterpretationPrompt(body.chart, {
+    name: body.name,
+    nameAnalysis: body.nameAnalysis,
+  });
   const ai = new GoogleGenAI({ apiKey });
 
   const encoder = new TextEncoder();
