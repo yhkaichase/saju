@@ -1,16 +1,16 @@
 import { describe, expect, it } from "vitest";
 
-import { HANJA_TABLE, lookupHanja, lookupHanjaName } from "./hanja-data";
+import { HANJA_TABLE, hanjaCandidates, lookupHanja, lookupHanjaName } from "./hanja-data";
 
 describe("hanja-data — 강희원획·자원오행 시드", () => {
   it("변형부수 원획 보정이 반영됨 (氵=水4 → 洪=10)", () => {
-    expect(lookupHanja("洪")).toEqual({ strokes: 10, element: "水" });
+    expect(lookupHanja("洪")).toMatchObject({ strokes: 10, element: "水" });
     expect(lookupHanja("浩")?.strokes).toBe(11); // 氵4+告7
     expect(lookupHanja("英")?.strokes).toBe(11); // 艹6+央5
   });
 
   it("구슬옥변(王=玉5) 보정 (珍=10)", () => {
-    expect(lookupHanja("珍")).toEqual({ strokes: 10, element: "金" });
+    expect(lookupHanja("珍")).toMatchObject({ strokes: 10, element: "金" });
   });
 
   it("대표 성씨 원획", () => {
@@ -34,6 +34,22 @@ describe("hanja-data — 강희원획·자원오행 시드", () => {
   it("자원오행은 부수 명확한 글자만 채움(모호하면 생략)", () => {
     expect(lookupHanja("金")?.element).toBe("金");
     expect(lookupHanja("姜")?.element).toBeUndefined(); // 모호 → 비움
+  });
+
+  it("독음으로 한자 후보를 찾는다(획수 오름차순)", () => {
+    const yeong = hanjaCandidates("영").map((c) => c.char);
+    expect(yeong).toContain("永"); // 5획
+    expect(yeong).toContain("英"); // 11획
+    // 획수 오름차순: 永(5) < 煐(13)
+    const strokes = hanjaCandidates("영").map((c) => c.strokes);
+    expect([...strokes]).toEqual([...strokes].sort((a, b) => a - b));
+    expect(hanjaCandidates("없는음")).toEqual([]);
+  });
+
+  it("모든 항목의 reading은 한글 1글자", () => {
+    for (const [ch, info] of Object.entries(HANJA_TABLE)) {
+      expect(info.reading.length, ch).toBe(1);
+    }
   });
 
   it("모든 항목의 원획수는 양의 정수", () => {

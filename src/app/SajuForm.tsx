@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { buildNameAnalysis, type NameInput } from "@/lib/saju/naming";
 import type { SajuChart } from "@/lib/saju/saju-chart";
 import type { Gender } from "@/types/saju";
+import { HanjaPicker } from "./HanjaPicker";
 import { SajuChartView } from "./SajuChartView";
 
 interface FormState {
@@ -125,51 +126,67 @@ export function SajuForm() {
           </select>
         </label>
 
-        <div className="flex w-full flex-wrap items-end gap-4 border-t border-zinc-200 pt-4 dark:border-zinc-700">
-          <span className="w-full text-xs text-zinc-400">
-            이름 (선택) — 입력하면 성명학 분석을 함께 제공합니다. 한자까지 넣으면
-            오격·81수리·자원오행까지 봅니다.
+        <div className="flex w-full flex-col gap-3 border-t border-zinc-200 pt-4 dark:border-zinc-700">
+          <span className="text-xs text-zinc-400">
+            이름 (선택) — 한글만 넣으면 발음오행, 한자까지 넣으면 오격·81수리·자원오행까지
+            분석합니다. 한자는 아래 후보를 탭하거나 직접 입력하세요.
           </span>
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-zinc-600 dark:text-zinc-300">성 (한글)</span>
-            <input
-              type="text"
-              value={form.surnameHangul}
-              placeholder="예: 황"
-              onChange={(e) => setForm({ ...form, surnameHangul: e.target.value })}
-              className="w-24 rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
+
+          <div className="flex flex-wrap items-end gap-3">
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="text-zinc-600 dark:text-zinc-300">성 (한글)</span>
+              <input
+                type="text"
+                value={form.surnameHangul}
+                placeholder="예: 최"
+                onChange={(e) => setForm({ ...form, surnameHangul: e.target.value })}
+                className="w-20 rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="text-zinc-600 dark:text-zinc-300">성 (한자)</span>
+              <input
+                type="text"
+                value={form.surnameHanja}
+                placeholder="예: 崔"
+                onChange={(e) => setForm({ ...form, surnameHanja: e.target.value })}
+                className="w-20 rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
+              />
+            </label>
+            <HanjaPicker
+              key={form.surnameHangul}
+              hangul={form.surnameHangul}
+              onComplete={(h) => h && setForm((f) => ({ ...f, surnameHanja: h }))}
             />
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-zinc-600 dark:text-zinc-300">이름 (한글)</span>
-            <input
-              type="text"
-              value={form.givenHangul}
-              placeholder="예: 연정"
-              onChange={(e) => setForm({ ...form, givenHangul: e.target.value })}
-              className="w-32 rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
+          </div>
+
+          <div className="flex flex-wrap items-end gap-3">
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="text-zinc-600 dark:text-zinc-300">이름 (한글)</span>
+              <input
+                type="text"
+                value={form.givenHangul}
+                placeholder="예: 영하"
+                onChange={(e) => setForm({ ...form, givenHangul: e.target.value })}
+                className="w-28 rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="text-zinc-600 dark:text-zinc-300">이름 (한자)</span>
+              <input
+                type="text"
+                value={form.givenHanja}
+                placeholder="예: 永夏"
+                onChange={(e) => setForm({ ...form, givenHanja: e.target.value })}
+                className="w-28 rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
+              />
+            </label>
+            <HanjaPicker
+              key={form.givenHangul}
+              hangul={form.givenHangul}
+              onComplete={(h) => h && setForm((f) => ({ ...f, givenHanja: h }))}
             />
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-zinc-600 dark:text-zinc-300">성 (한자)</span>
-            <input
-              type="text"
-              value={form.surnameHanja}
-              placeholder="예: 黃"
-              onChange={(e) => setForm({ ...form, surnameHanja: e.target.value })}
-              className="w-24 rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
-            />
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-zinc-600 dark:text-zinc-300">이름 (한자)</span>
-            <input
-              type="text"
-              value={form.givenHanja}
-              placeholder="예: 延政"
-              onChange={(e) => setForm({ ...form, givenHanja: e.target.value })}
-              className="w-32 rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
-            />
-          </label>
+          </div>
         </div>
 
         <button
