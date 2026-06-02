@@ -91,6 +91,81 @@ export const HANJA_TABLE: Readonly<Record<string, HanjaInfo>> = {
   夏: { reading: "하", strokes: 10, element: "火" }, // 10 (여름 하, 火)
   筵: { reading: "연", strokes: 13, element: "木" }, // 竹6+延7 (대자리 연, 竹→木)
   定: { reading: "정", strokes: 8 }, // 宀3+疋5 (정할 정, 자원 모호 → 비움)
+
+  // ── 확장: 빈출 이름 음절 (강희 원획, 변형부수 보정) ──
+  // 영
+  泳: { reading: "영", strokes: 9, element: "水" }, // 氵4+永5
+  映: { reading: "영", strokes: 9, element: "火" }, // 日4+央5
+  榮: { reading: "영", strokes: 14, element: "木" }, // 영화 영(木부)
+  // 정
+  政: { reading: "정", strokes: 9 }, // 正5+攵4
+  貞: { reading: "정", strokes: 9 }, // 卜2+貝7
+  晶: { reading: "정", strokes: 12, element: "火" }, // 日×3
+  // 수
+  修: { reading: "수", strokes: 10 }, // 닦을 수
+  洙: { reading: "수", strokes: 10, element: "水" }, // 氵4+朱6
+  守: { reading: "수", strokes: 6 }, // 宀3+寸3
+  壽: { reading: "수", strokes: 14 }, // 목숨 수
+  // 미
+  米: { reading: "미", strokes: 6, element: "木" }, // 쌀 미
+  // 지
+  志: { reading: "지", strokes: 7 }, // 士3+心4
+  知: { reading: "지", strokes: 8 }, // 矢5+口3
+  芝: { reading: "지", strokes: 10, element: "木" }, // 艹6+之4
+  池: { reading: "지", strokes: 7, element: "水" }, // 氵4+也3
+  // 현
+  玄: { reading: "현", strokes: 5 }, // 검을 현
+  鉉: { reading: "현", strokes: 13, element: "金" }, // 金8+玄5
+  // 준
+  峻: { reading: "준", strokes: 10, element: "土" }, // 山3+夋7
+  浚: { reading: "준", strokes: 11, element: "水" }, // 氵4+夋7
+  晙: { reading: "준", strokes: 11, element: "火" }, // 日4+夋7
+  // 민
+  旻: { reading: "민", strokes: 8, element: "火" }, // 日4+文4
+  珉: { reading: "민", strokes: 10, element: "金" }, // 王(玉)5+民5
+  敏: { reading: "민", strokes: 11 }, // 민첩할 민
+  // 진
+  眞: { reading: "진", strokes: 10 }, // 참 진
+  振: { reading: "진", strokes: 11 }, // 扌(手)4+辰7
+  鎭: { reading: "진", strokes: 18, element: "金" }, // 金8+眞10
+  津: { reading: "진", strokes: 10, element: "水" }, // 氵4+聿6
+  // 우
+  雨: { reading: "우", strokes: 8, element: "水" }, // 비 우
+  佑: { reading: "우", strokes: 7 }, // 亻2+右5
+  祐: { reading: "우", strokes: 10 }, // 示5+右5
+  // 성
+  星: { reading: "성", strokes: 9, element: "火" }, // 日4+生5
+  城: { reading: "성", strokes: 10, element: "土" }, // 土3+成7
+  晟: { reading: "성", strokes: 11, element: "火" }, // 日4+成7
+  性: { reading: "성", strokes: 9 }, // 忄(心)4+生5
+  // 은
+  銀: { reading: "은", strokes: 14, element: "金" }, // 金8+艮6
+  垠: { reading: "은", strokes: 9, element: "土" }, // 土3+艮6
+  // 서
+  序: { reading: "서", strokes: 7 }, // 广3+予4
+  書: { reading: "서", strokes: 10 }, // 글 서
+  舒: { reading: "서", strokes: 12 }, // 舍8+予4
+  // 호
+  昊: { reading: "호", strokes: 8, element: "火" }, // 日4+天4
+  湖: { reading: "호", strokes: 13, element: "水" }, // 氵4+胡9
+  虎: { reading: "호", strokes: 8 }, // 범 호
+  鎬: { reading: "호", strokes: 18, element: "金" }, // 金8+高10
+  // 하
+  賀: { reading: "하", strokes: 12 }, // 加5+貝7
+  昰: { reading: "하", strokes: 9, element: "火" }, // 日4+正5
+  // 연
+  演: { reading: "연", strokes: 15, element: "水" }, // 氵4+寅11
+  // 재
+  在: { reading: "재", strokes: 6 }, // 있을 재
+  材: { reading: "재", strokes: 7, element: "木" }, // 木4+才3
+  宰: { reading: "재", strokes: 10 }, // 宀3+辛7
+  栽: { reading: "재", strokes: 10, element: "木" }, // 심을 재(木부)
+  載: { reading: "재", strokes: 13 }, // 실을 재
+  // 주
+  周: { reading: "주", strokes: 8 }, // 두루 주
+  柱: { reading: "주", strokes: 9, element: "木" }, // 木4+主5
+  珠: { reading: "주", strokes: 11, element: "金" }, // 王(玉)5+朱6
+  宙: { reading: "주", strokes: 8 }, // 宀3+由5
 };
 
 /** 한자 한 글자의 정보를 찾습니다. 미수록이면 null. */

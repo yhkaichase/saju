@@ -36,6 +36,23 @@ describe("hanja-data — 강희원획·자원오행 시드", () => {
     expect(lookupHanja("姜")?.element).toBeUndefined(); // 모호 → 비움
   });
 
+  it("확장 한자 강희원획 골든(변형부수 보정)", () => {
+    expect(lookupHanja("泳")?.strokes).toBe(9); // 氵4+永5
+    expect(lookupHanja("池")?.strokes).toBe(7); // 氵4+也3
+    expect(lookupHanja("城")?.strokes).toBe(10); // 土3+成7
+    expect(lookupHanja("銀")?.strokes).toBe(14); // 金8+艮6
+    expect(lookupHanja("湖")?.strokes).toBe(13); // 氵4+胡9
+    expect(lookupHanja("演")?.strokes).toBe(15); // 氵4+寅11
+    expect(lookupHanja("珠")?.strokes).toBe(11); // 玉5+朱6
+    expect(lookupHanja("峻")?.strokes).toBe(10); // 山3+夋7
+  });
+
+  it("빈출 음절은 후보가 4개 이상", () => {
+    for (const reading of ["영", "정", "수", "지", "현", "준", "민", "진", "성", "주"]) {
+      expect(hanjaCandidates(reading).length, reading).toBeGreaterThanOrEqual(4);
+    }
+  });
+
   it("독음으로 한자 후보를 찾는다(획수 오름차순)", () => {
     const yeong = hanjaCandidates("영").map((c) => c.char);
     expect(yeong).toContain("永"); // 5획
