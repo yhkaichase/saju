@@ -138,7 +138,7 @@ export function SajuForm() {
               <input
                 type="text"
                 value={form.surnameHangul}
-                placeholder="예: 최"
+                placeholder="예: 홍"
                 onChange={(e) => setForm({ ...form, surnameHangul: e.target.value })}
                 className="w-20 rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
               />
@@ -148,7 +148,7 @@ export function SajuForm() {
               <input
                 type="text"
                 value={form.surnameHanja}
-                placeholder="예: 崔"
+                placeholder="예: 洪"
                 onChange={(e) => setForm({ ...form, surnameHanja: e.target.value })}
                 className="w-20 rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
               />
@@ -166,7 +166,7 @@ export function SajuForm() {
               <input
                 type="text"
                 value={form.givenHangul}
-                placeholder="예: 영하"
+                placeholder="예: 길동"
                 onChange={(e) => setForm({ ...form, givenHangul: e.target.value })}
                 className="w-28 rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
               />
@@ -176,7 +176,7 @@ export function SajuForm() {
               <input
                 type="text"
                 value={form.givenHanja}
-                placeholder="예: 永夏"
+                placeholder="예: 吉童"
                 onChange={(e) => setForm({ ...form, givenHanja: e.target.value })}
                 className="w-28 rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
               />
